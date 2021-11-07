@@ -2,12 +2,10 @@ package io.mamish.autofactory.graph;
 
 import io.mamish.autofactory.Constants;
 import io.mamish.autofactory.RecipeSet;
-import io.mamish.autofactory.model.ProductAmount;
+import io.mamish.autofactory.model.FactoryRequest;
 import io.mamish.autofactory.model.ProductRecipe;
 import org.jgrapht.graph.DirectedAcyclicGraph;
 
-import javax.swing.text.html.Option;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -17,16 +15,22 @@ public class ProductGraph {
     private final RecipeSet recipeSet;
     private final ProductNode outputNode;
 
-    public ProductGraph(RecipeSet recipeSet, List<ProductAmount> desiredOutput) {
+    public ProductGraph(RecipeSet recipeSet, FactoryRequest factoryRequest) {
         this.recipeSet = recipeSet;
-        ProductRecipe outputRecipe = new ProductRecipe(Constants.FACTORY_OUTPUT_PRODUCT_NAME, desiredOutput);
+        ProductRecipe outputRecipe = new ProductRecipe(Constants.FACTORY_OUTPUT_PRODUCT_NAME, factoryRequest.desiredOutput());
         this.outputNode = addProductNodesRecursive(outputRecipe);
         propagateCumulativeCost();
     }
 
-    public double getCumulativeWeight(String fromProduct, String toProduct) {
+    public double getProductRequired(String fromProduct, String toProduct) {
         ProductEdge edge = graph.getEdge(new ProductNode(fromProduct), new ProductNode(toProduct));
         return Optional.ofNullable(edge).map(ProductEdge::getCumulativeCost).orElse(0d);
+    }
+
+    public double getTotalProductRequired(String fromProduct) {
+        return graph.incomingEdgesOf(new ProductNode(fromProduct)).stream()
+                .mapToDouble(ProductEdge::getCumulativeCost)
+                .sum();
     }
 
     private ProductNode addProductNodesRecursive(ProductRecipe nodeRecipe) {
