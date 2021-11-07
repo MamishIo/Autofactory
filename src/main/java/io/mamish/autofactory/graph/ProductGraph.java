@@ -1,9 +1,9 @@
 package io.mamish.autofactory.graph;
 
 import io.mamish.autofactory.Constants;
-import io.mamish.autofactory.RecipeSet;
 import io.mamish.autofactory.model.FactoryRequest;
 import io.mamish.autofactory.model.ProductRecipe;
+import io.mamish.autofactory.recipe.RecipeSet;
 import org.jgrapht.graph.DirectedAcyclicGraph;
 
 import java.util.Optional;

@@ -1,4 +1,4 @@
-package io.mamish.autofactory;
+package io.mamish.autofactory.recipe;
 
 import io.mamish.autofactory.model.ProductRecipe;
 
@@ -18,5 +18,4 @@ public class RecipeSet {
     public ProductRecipe getRecipe(String name) throws NoSuchElementException {
         return Optional.ofNullable(namesToRecipes.get(name)).orElseThrow(NoSuchElementException::new);
     }
-
 }
